@@ -3,8 +3,7 @@
  */
 
 #include <vector>
-
-#define MAZE_SIZE 16
+#include "API.h"
 
 struct Square
 {
@@ -20,9 +19,18 @@ struct GraphNode
 
 struct Maze
 {
-    GraphNode board[MAZE_SIZE][MAZE_SIZE];
+    GraphNode **board;
     Square position;
+    Direction direction; 
 };
 
 Maze initMaze();
-void updateDistances(Maze maze, Square target);
+void updateDistances(Maze &maze, Square target);
+
+enum Direction
+{
+    UP,
+    RIGHT,
+    DOWN,
+    LEFT
+};
