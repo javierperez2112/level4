@@ -5,4 +5,4 @@
 #include "Maze.h"
 
 void updateGraph(Maze &maze);
-void makeMove(Square move);
+bool makeMove(Maze &maze, Square move);

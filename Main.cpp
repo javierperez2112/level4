@@ -11,4 +11,6 @@ void log(const std::string &text)
 int main(int argc, char *argv[])
 {
     log("Running...");
+    Maze maze = initMaze();
+    updateDistances(maze);
 }
