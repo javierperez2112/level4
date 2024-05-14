@@ -2,6 +2,7 @@
 #include <string>
 
 #include "Maze.h"
+#include "Mouse.h"
 
 void log(const std::string &text)
 {
@@ -13,4 +14,6 @@ int main(int argc, char *argv[])
     log("Running...");
     Maze maze = initMaze();
     updateDistances(maze);
+    while(true)
+        makeMove(maze, {0,1});
 }

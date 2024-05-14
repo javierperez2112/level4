@@ -2,6 +2,10 @@
  *
  */
 
+
+
+#pragma once
+
 #include <vector>
 #include "API.h"
 

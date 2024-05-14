@@ -51,6 +51,9 @@ void updateDistances(Maze &maze)
     }
     Square targetSquare = {maze.width / 2, maze.height / 2};
     maze.board[targetSquare.x][targetSquare.y].distance = 0;
+    maze.board[targetSquare.x - 1][targetSquare.y].distance = 0;
+    maze.board[targetSquare.x][targetSquare.y - 1].distance = 0;
+    maze.board[targetSquare.x - 1][targetSquare.y - 1].distance = 0;
     dijkstra(maze, targetSquare);
     for (int i = 0; i < maze.width; i++)
     {
