@@ -8,6 +8,11 @@
 
 static void dijkstra(Maze &maze, Square &currentSquare);
 
+/**
+ * @brief Create new maze.
+ * 
+ * @return The new maze.
+*/
 Maze initMaze()
 {
     Maze newMaze;
@@ -39,6 +44,11 @@ Maze initMaze()
     return newMaze;
 }
 
+/**
+ * @brief Update distances based on existing graph edges.
+ * 
+ * @param maze The maze.
+*/
 void updateDistances(Maze &maze)
 {
     for (int i = 0; i < maze.width; i++)
@@ -64,6 +74,12 @@ void updateDistances(Maze &maze)
     }
 }
 
+/**
+ * @brief Internal function implementing Dijkstra's algorithm to assign distances to nodes.
+ * 
+ * @param maze The maze.
+ * @param currentSquare The square being visited.
+*/
 static void dijkstra(Maze &maze, Square &currentSquare)
 {
     auto currentNode = &maze.board[currentSquare.x][currentSquare.y];
