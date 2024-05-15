@@ -94,7 +94,7 @@ void updateGraph(Maze &maze)
             {
                 if(otherIter->x == maze.position.x && otherIter->y == maze.position.y)
                 {
-                    otherNode.neighbors.erase(otherIter);
+                    otherIter = otherNode.neighbors.erase(otherIter);
                     break;
                 }
                 otherIter++;
@@ -102,7 +102,7 @@ void updateGraph(Maze &maze)
             iter = currentNode.neighbors.erase(iter);
             continue;
         }
-        ++iter;
+        iter++;
     }
 }
 

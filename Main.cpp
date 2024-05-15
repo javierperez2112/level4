@@ -15,11 +15,10 @@ int main(int argc, char *argv[])
 {
     log("Running...");
     Maze maze = initMaze();
-    while(1)
+    do
     {
-    updateGraph(maze);
-    updateDistances(maze);
-    makeMove(maze, leastDistanceMove(maze));
-    }
-    
+        updateGraph(maze);
+        updateDistances(maze);
+        makeMove(maze, leastDistanceMove(maze));
+    } while (maze.board[maze.position.x][maze.position.y].distance != 0);
 }
