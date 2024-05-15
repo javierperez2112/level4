@@ -44,10 +44,7 @@ bool makeMove(Maze &maze, Square move)
  */
 void updateGraph(Maze &maze)
 {
-    auto currentNode = maze.board[maze.position.x][maze.position.y];
-    bool fWall = API::wallFront();
-    bool rWall = API::wallRight();
-    bool lWall = API::wallLeft();
+    auto &currentNode = maze.board[maze.position.x][maze.position.y];
     std::vector<Square>::iterator iter = currentNode.neighbors.begin();
     while (iter != currentNode.neighbors.end())
     {
@@ -55,9 +52,9 @@ void updateGraph(Maze &maze)
         Direction moveDir = moveDirection(move);
         /**
          * @todo Eliminate invalid connections.
-         */
-        Direction lookDir = (Direction)(moveDir - maze.direction);
-        bool wallInDirection;
+        */
+        Direction lookDir = (Direction)((moveDir - maze.direction) % 4);
+        bool wallInDirection = false;
         switch (lookDir)
         {
         case UP:
@@ -70,6 +67,7 @@ void updateGraph(Maze &maze)
             wallInDirection = API::wallLeft();
             break;
         default:
+            wallInDirection = false;
             break;
         }
         if (wallInDirection)
@@ -92,12 +90,25 @@ void updateGraph(Maze &maze)
             }
             API::setWall(maze.position.x, maze.position.y, directionChar);
             iter = currentNode.neighbors.erase(iter);
+            continue;
         }
-        else
+        ++iter;
+    }
+}
+
+Square leastDistanceMove(Maze &maze)
+{
+    Square leastMove;
+    int leastDistance = 2 * maze.width * maze.height;
+    for (Square move : maze.board[maze.position.x][maze.position.y].neighbors)
+    {
+        if (maze.board[move.x][move.y].distance < leastDistance)
         {
-            iter++;
+            leastDistance = maze.board[move.x][move.y].distance;
+            leastMove = move;
         }
     }
+    return {leastMove.x - maze.position.x, leastMove.y - maze.position.y};
 }
 
 /**

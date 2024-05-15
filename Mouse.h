@@ -7,3 +7,4 @@
 
 void updateGraph(Maze &maze);
 bool makeMove(Maze &maze, Square move);
+Square leastDistanceMove(Maze &maze);
