@@ -41,6 +41,8 @@ bool makeMove(Maze &maze, Square move)
  * @brief Update graph edges based on walls around mouse.
  *
  * @param maze The maze.
+ * @bug Seems to ignore some nodes, try example maze 5.
+ * Bug fixed: modulo operator will maintain sign!
  */
 void updateGraph(Maze &maze)
 {
@@ -50,10 +52,7 @@ void updateGraph(Maze &maze)
     {
         Square move = {iter->x - maze.position.x, iter->y - maze.position.y};
         Direction moveDir = moveDirection(move);
-        /**
-         * @todo Eliminate invalid connections.
-        */
-        Direction lookDir = (Direction)((moveDir - maze.direction) % 4);
+        Direction lookDir = (Direction)((moveDir - maze.direction + 4) % 4);
         bool wallInDirection = false;
         switch (lookDir)
         {
@@ -89,6 +88,17 @@ void updateGraph(Maze &maze)
                 break;
             }
             API::setWall(maze.position.x, maze.position.y, directionChar);
+            auto &otherNode = maze.board[iter->x][iter->y];
+            std::vector<Square>::iterator otherIter = otherNode.neighbors.begin();
+            while(otherIter != otherNode.neighbors.end())   // Look for same connection and erase it.
+            {
+                if(otherIter->x == maze.position.x && otherIter->y == maze.position.y)
+                {
+                    otherNode.neighbors.erase(otherIter);
+                    break;
+                }
+                otherIter++;
+            }
             iter = currentNode.neighbors.erase(iter);
             continue;
         }

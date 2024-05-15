@@ -1,5 +1,7 @@
 /**
  *  Functions related to solving the maze
+ * 
+ * @bug Distances are incorrectly set, try example maze 5.
  */
 #include "API.h"
 #include "Maze.h"
