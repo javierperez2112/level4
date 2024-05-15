@@ -13,7 +13,12 @@ int main(int argc, char *argv[])
 {
     log("Running...");
     Maze maze = initMaze();
+    updateGraph(maze);
     updateDistances(maze);
-    while(true)
-        makeMove(maze, {0,1});
+    makeMove(maze, {0,1});
+    makeMove(maze, {0,1});
+    makeMove(maze, {1,0});
+    makeMove(maze, {-1,0});
+    makeMove(maze, {0,-1});
+    makeMove(maze, {0,-1});
 }
