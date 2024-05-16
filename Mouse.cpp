@@ -13,7 +13,7 @@ bool makeMove(Maze &maze, Square move)
 {
     Square newPosition = {maze.position.x + move.x, maze.position.y + move.y};
     bool found = false;
-    auto neighbors = maze.board[maze.position.x][maze.position.y].neighbors;
+    std::vector<Square> neighbors = maze.board[maze.position.x][maze.position.y].neighbors;
     for (Square position : neighbors)
     {
         if (newPosition.x == position.x && newPosition.y == position.y)
@@ -29,8 +29,42 @@ bool makeMove(Maze &maze, Square move)
     Direction moveDir = moveDirection(move);
     while (maze.direction != moveDir)
     {
-        API::turnRight();
-        maze.direction = (Direction)((maze.direction + RIGHT) % 4);
+        if (maze.direction != UP)
+        {
+            if (moveDir == UP && maze.direction == LEFT)
+            {
+                API::turnRight();
+                maze.direction = (Direction)((maze.direction + RIGHT) % 4);
+                continue;
+            }
+            if (moveDir > maze.direction)
+            {
+                API::turnRight();
+                maze.direction = (Direction)((maze.direction + RIGHT) % 4);
+                continue;
+            }
+            else
+            {
+                API::turnLeft();
+                maze.direction = (Direction)((maze.direction + LEFT) % 4);
+                continue;
+            }
+        }
+        else
+        {
+            if (moveDir == LEFT)
+            {
+                API::turnLeft();
+                maze.direction = (Direction)((maze.direction + LEFT) % 4);
+                continue;
+            }
+            else
+            {
+                API::turnRight();
+                maze.direction = (Direction)((maze.direction + RIGHT) % 4);
+                continue;
+            }
+        }
     }
     API::moveForward();
     maze.position = newPosition;
@@ -90,9 +124,9 @@ void updateGraph(Maze &maze)
             API::setWall(maze.position.x, maze.position.y, directionChar);
             auto &otherNode = maze.board[iter->x][iter->y];
             std::vector<Square>::iterator otherIter = otherNode.neighbors.begin();
-            while(otherIter != otherNode.neighbors.end())   // Look for same connection and erase it.
+            while (otherIter != otherNode.neighbors.end()) // Look for same connection and erase it.
             {
-                if(otherIter->x == maze.position.x && otherIter->y == maze.position.y)
+                if (otherIter->x == maze.position.x && otherIter->y == maze.position.y)
                 {
                     otherIter = otherNode.neighbors.erase(otherIter);
                     break;

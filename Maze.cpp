@@ -11,7 +11,7 @@
 #include <forward_list>
 #include <deque>
 
-static void dijkstra(Maze &maze, Square &currentSquare);
+static void dijkstra(Maze &maze, std::vector<Square> &targetSquares);
 
 /**
  * @brief Create new maze.
@@ -75,10 +75,13 @@ void updateDistances(Maze &maze)
             maze.board[i][j].visited = false;
         }
     }
-    Square targetSquare = {maze.width / 2, maze.height / 2};
-    maze.board[targetSquare.x][targetSquare.y].distance = 0;
+    std::vector<Square> targetSquares;
+    targetSquares.push_back({maze.width / 2, maze.height / 2});
+    targetSquares.push_back({maze.width / 2 - 1, maze.height / 2});
+    targetSquares.push_back({maze.width / 2, maze.height / 2 - 1});
+    targetSquares.push_back({maze.width / 2 - 1, maze.height / 2 - 1});
 
-    dijkstra(maze, targetSquare);
+    dijkstra(maze, targetSquares);
 
     for (int i = 0; i < maze.width; i++)
     {
@@ -96,10 +99,11 @@ void updateDistances(Maze &maze)
  * @param maze The maze.
  * @param currentSquare The square being visited.
  */
-static void dijkstra(Maze &maze, Square &currentSquare)
+static void dijkstra(Maze &maze, std::vector<Square> &targetSquares)
 {
     std::deque<Square> moves;
-    moves.push_front(currentSquare);
+    for (Square &sq : targetSquares)
+        moves.push_front(sq);
     int distance = 0;
     while (moves.size() > 0)
     {
