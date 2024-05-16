@@ -8,10 +8,8 @@
 #include "Maze.h"
 
 #include <iterator>
-#include <forward_list>
-#include <deque>
+#include <queue>
 
-static void dijkstra(Maze &maze, std::vector<Square> &targetSquares);
 
 /**
  * @brief Create new maze.
@@ -60,72 +58,57 @@ Maze initMaze()
 }
 
 /**
- * @brief Update distances based on existing graph edges.
+ * @brief Update distances using Dijkstra's algorithm.
+ * @note Dijkstra's algorithm is implemented iteratively.
  *
  * @param maze The maze.
+ * @param targetSquares List of squares with distance 0.
  */
-void updateDistances(Maze &maze)
+void updateDistances(Maze &maze, std::vector<Square> &targetSquares)
 {
-    int maxDistance = 2 * maze.width * maze.height;
+    // Set all nodes to not visited.
     for (int i = 0; i < maze.width; i++)
     {
         for (int j = 0; j < maze.height; j++)
         {
-            maze.board[i][j].distance = maxDistance;
             maze.board[i][j].visited = false;
         }
     }
-    std::vector<Square> targetSquares;
-    targetSquares.push_back({maze.width / 2, maze.height / 2});
-    targetSquares.push_back({maze.width / 2 - 1, maze.height / 2});
-    targetSquares.push_back({maze.width / 2, maze.height / 2 - 1});
-    targetSquares.push_back({maze.width / 2 - 1, maze.height / 2 - 1});
 
-    dijkstra(maze, targetSquares);
+    // Dijkstra's algorithm.
+    std::queue<Square> moves;
+    for(Square &targetSquare : targetSquares)
+    {
+        moves.push(targetSquare);
+        maze.board[targetSquare.x][targetSquare.y].visited = true;
+    }
+    int distance = 0;
+    while(moves.size() > 0)
+    {
+        int movesSize = moves.size();
+        for(int i = 0; i < movesSize; i++)
+        {
+            Square &currentSquare = moves.front();
+            GraphNode &currentNode = maze.board[currentSquare.x][currentSquare.y];
+            currentNode.distance = distance;
+            for(Square &visitSquare : currentNode.neighbors)
+            {
+                GraphNode &visitNode = maze.board[visitSquare.x][visitSquare.y];
+                if(!visitNode.visited)
+                    moves.push(visitSquare);
+                visitNode.visited = true;
+            }
+            moves.pop();
+        }
+        distance++;
+    }
 
+    // Update distances on screen.
     for (int i = 0; i < maze.width; i++)
     {
         for (int j = 0; j < maze.height; j++)
         {
             API::setText(i, j, std::to_string(maze.board[i][j].distance));
         }
-    }
-}
-
-/**
- * @brief Internal function implementing A Dijkstra-inspired algorithm to assign distances to nodes.
- * @note It works iteratively, not recursively.
- *
- * @param maze The maze.
- * @param currentSquare The square being visited.
- */
-static void dijkstra(Maze &maze, std::vector<Square> &targetSquares)
-{
-    std::deque<Square> moves;
-    for (Square &sq : targetSquares)
-        moves.push_front(sq);
-    int distance = 0;
-    while (moves.size() > 0)
-    {
-        int movesSize = moves.size();
-        for (Square &move : moves)
-        {
-            GraphNode *currentNode = &maze.board[move.x][move.y];
-            if (currentNode->visited)
-            {
-                continue;
-            }
-            currentNode->visited = true;
-            currentNode->distance = std::min(distance, currentNode->distance);
-            for (Square &neighbor : currentNode->neighbors)
-            {
-                moves.push_front(neighbor);
-            }
-        }
-        for (int i = 0; i < movesSize; i++)
-        {
-            moves.pop_back();
-        }
-        distance++;
     }
 }

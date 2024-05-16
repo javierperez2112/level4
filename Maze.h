@@ -39,4 +39,4 @@ struct Maze
 };
 
 Maze initMaze();
-void updateDistances(Maze &maze);
+void updateDistances(Maze &maze, std::vector<Square> &targetSquares);
