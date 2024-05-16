@@ -78,10 +78,12 @@ void updateDistances(Maze &maze, std::vector<Square> &targetSquares)
 
     // Dijkstra's algorithm.
     std::queue<Square> moves;
+    API::clearAllColor();
     for (Square &targetSquare : targetSquares)
     {
         moves.push(targetSquare);
         maze.board[targetSquare.x][targetSquare.y].visited = true;
+        API::setColor(targetSquare.x, targetSquare.y, 'g'); // Use the loop to paint targets.
     }
     int distance = 0;
     while (moves.size() > 0)
@@ -114,7 +116,6 @@ void updateDistances(Maze &maze, std::vector<Square> &targetSquares)
     }
 
     // Draw supposed best path.
-    API::clearAllColor();
     Square currentSquare = maze.position;
     while (maze.board[currentSquare.x][currentSquare.y].distance > 0)
     {
