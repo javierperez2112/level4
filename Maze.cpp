@@ -2,11 +2,14 @@
  *  Functions related to solving the maze
  *
  * @bug Distances are incorrectly set, try example maze 5.
+ * Fixed by making the algorithm iterative.
  */
 #include "API.h"
 #include "Maze.h"
 
 #include <iterator>
+#include <forward_list>
+#include <deque>
 
 static void dijkstra(Maze &maze, Square &currentSquare);
 
@@ -74,35 +77,51 @@ void updateDistances(Maze &maze)
     }
     Square targetSquare = {maze.width / 2, maze.height / 2};
     maze.board[targetSquare.x][targetSquare.y].distance = 0;
+
     dijkstra(maze, targetSquare);
+
     for (int i = 0; i < maze.width; i++)
     {
         for (int j = 0; j < maze.height; j++)
         {
-            API::setText(i, j, std::to_string(maze.board[i][j].neighbors.size()));
+            API::setText(i, j, std::to_string(maze.board[i][j].distance));
         }
     }
 }
 
 /**
- * @brief Internal function implementing Dijkstra's algorithm to assign distances to nodes.
+ * @brief Internal function implementing A Dijkstra-inspired algorithm to assign distances to nodes.
+ * @note It works iteratively, not recursively.
  *
  * @param maze The maze.
  * @param currentSquare The square being visited.
  */
 static void dijkstra(Maze &maze, Square &currentSquare)
 {
-    GraphNode *currentNode = &maze.board[currentSquare.x][currentSquare.y];
-    if (currentNode->visited)
-        return;
-    currentNode->visited = true;
-    for (Square &visitSquare : currentNode->neighbors)
+    std::deque<Square> moves;
+    moves.push_front(currentSquare);
+    int distance = 0;
+    while (moves.size() > 0)
     {
-        GraphNode *visitNode = &maze.board[visitSquare.x][visitSquare.y];
-        visitNode->distance = std::min(currentNode->distance + 1, visitNode->distance);
-    }
-    for (Square &visitSquare : currentNode->neighbors)
-    {
-        dijkstra(maze, visitSquare);
+        int movesSize = moves.size();
+        for (Square &move : moves)
+        {
+            GraphNode *currentNode = &maze.board[move.x][move.y];
+            if (currentNode->visited)
+            {
+                continue;
+            }
+            currentNode->visited = true;
+            currentNode->distance = std::min(distance, currentNode->distance);
+            for (Square &neighbor : currentNode->neighbors)
+            {
+                moves.push_front(neighbor);
+            }
+        }
+        for (int i = 0; i < movesSize; i++)
+        {
+            moves.pop_back();
+        }
+        distance++;
     }
 }
