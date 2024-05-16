@@ -24,6 +24,7 @@ static void explore(Maze &maze)
     centerTarget.push_back({maze.width / 2, maze.height / 2 - 1});
     centerTarget.push_back({maze.width / 2 - 1, maze.height / 2 - 1});
     cornerTarget.push_back({0, 0});
+    
     do
     {
         updateGraph(maze);

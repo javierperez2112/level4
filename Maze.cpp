@@ -10,6 +10,7 @@
 #include <iterator>
 #include <queue>
 
+static void fillPath(Maze &maze);
 
 /**
  * @brief Create new maze.
@@ -77,24 +78,24 @@ void updateDistances(Maze &maze, std::vector<Square> &targetSquares)
 
     // Dijkstra's algorithm.
     std::queue<Square> moves;
-    for(Square &targetSquare : targetSquares)
+    for (Square &targetSquare : targetSquares)
     {
         moves.push(targetSquare);
         maze.board[targetSquare.x][targetSquare.y].visited = true;
     }
     int distance = 0;
-    while(moves.size() > 0)
+    while (moves.size() > 0)
     {
         int movesSize = moves.size();
-        for(int i = 0; i < movesSize; i++)
+        for (int i = 0; i < movesSize; i++)
         {
             Square &currentSquare = moves.front();
             GraphNode &currentNode = maze.board[currentSquare.x][currentSquare.y];
             currentNode.distance = distance;
-            for(Square &visitSquare : currentNode.neighbors)
+            for (Square &visitSquare : currentNode.neighbors)
             {
                 GraphNode &visitNode = maze.board[visitSquare.x][visitSquare.y];
-                if(!visitNode.visited)
+                if (!visitNode.visited)
                     moves.push(visitSquare);
                 visitNode.visited = true;
             }
@@ -110,5 +111,25 @@ void updateDistances(Maze &maze, std::vector<Square> &targetSquares)
         {
             API::setText(i, j, std::to_string(maze.board[i][j].distance));
         }
+    }
+
+    // Draw supposed best path.
+    API::clearAllColor();
+    Square currentSquare = maze.position;
+    while (maze.board[currentSquare.x][currentSquare.y].distance > 0)
+    {
+        API::setColor(currentSquare.x, currentSquare.y, 'b');
+        Square leastMove;
+        int leastDistance = 2 * maze.width * maze.height;
+        for (Square move : maze.board[currentSquare.x][currentSquare.y].neighbors)
+        {
+            if (maze.board[move.x][move.y].distance < leastDistance)
+            {
+                leastDistance = maze.board[move.x][move.y].distance;
+                leastMove = move;
+            }
+        }
+        currentSquare.x = leastMove.x;
+        currentSquare.y = leastMove.y;
     }
 }
