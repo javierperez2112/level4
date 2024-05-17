@@ -7,6 +7,8 @@
 #pragma once
 
 #include <vector>
+#include <iterator>
+#include <queue>
 #include "API.h"
 
 struct Square

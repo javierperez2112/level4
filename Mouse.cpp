@@ -9,7 +9,7 @@ static Direction moveDirection(Square &move);
  * @param move The move to make.
  * @return Move is possible and done.
  */
-bool makeMove(Maze &maze, Square move)
+bool makeMove(Maze &maze, Square move, moveList &movelist)
 {
     Square newPosition = {maze.position.x + move.x, maze.position.y + move.y};
     bool found = false;
@@ -34,18 +34,21 @@ bool makeMove(Maze &maze, Square move)
             if (moveDir == UP && maze.direction == LEFT)
             {
                 API::turnRight();
+                movelist.push(RIGHT);
                 maze.direction = (Direction)((maze.direction + RIGHT) % 4);
                 continue;
             }
             if (moveDir > maze.direction)
             {
                 API::turnRight();
+                movelist.push(RIGHT);
                 maze.direction = (Direction)((maze.direction + RIGHT) % 4);
                 continue;
             }
             else
             {
                 API::turnLeft();
+                movelist.push(LEFT);
                 maze.direction = (Direction)((maze.direction + LEFT) % 4);
                 continue;
             }
@@ -55,18 +58,21 @@ bool makeMove(Maze &maze, Square move)
             if (moveDir == LEFT)
             {
                 API::turnLeft();
+                movelist.push(LEFT);
                 maze.direction = (Direction)((maze.direction + LEFT) % 4);
                 continue;
             }
             else
             {
                 API::turnRight();
+                movelist.push(RIGHT);
                 maze.direction = (Direction)((maze.direction + RIGHT) % 4);
                 continue;
             }
         }
     }
     API::moveForward();
+    movelist.push(UP);
     maze.position = newPosition;
     return true;
 }
@@ -171,4 +177,24 @@ static Direction moveDirection(Square &move)
         return RIGHT;
     else
         return LEFT;
+}
+
+void followMoveList(Maze &maze, moveList &movelist)
+{
+    while (movelist.size() > 0)
+    {
+        switch (movelist.front())
+        {
+        case UP:
+            API::moveForward();
+            break;
+        case RIGHT:
+            API::turnRight();
+            break;
+        case LEFT:
+            API::turnLeft();
+            break;
+        }
+        movelist.pop();
+    }
 }

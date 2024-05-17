@@ -15,7 +15,7 @@ void log(const std::string &text)
     std::cerr << text << std::endl;
 }
 
-static void explore(Maze &maze)
+static void explore(Maze &maze, moveList &movelist)
 {
 
     std::vector<Square> centerTarget, cornerTarget;
@@ -32,14 +32,15 @@ static void explore(Maze &maze)
         updateGraph(maze);
         updateDistances(maze, centerTarget);
         Square move = leastDistanceMove(maze);
-        makeMove(maze, move);
+        makeMove(maze, move, movelist);
     } while (maze.board[maze.position.x][maze.position.y].distance != 0);
+    moveList dummy;
     do
     {
         updateGraph(maze);
         updateDistances(maze, cornerTarget);
         Square move = leastDistanceMove(maze);
-        makeMove(maze, move);
+        makeMove(maze, move, dummy);
     } while (maze.board[maze.position.x][maze.position.y].distance != 0);
 
     updateDistances(maze, centerTarget);
@@ -49,8 +50,20 @@ int main(int argc, char *argv[])
 {
     log("Running...");
     Maze maze = initMaze();
-    // return 0;
-    explore(maze);
-    explore(maze);
-    explore(maze);
+    moveList movelist;
+    moveList dummy;
+    log("First run...");
+    explore(maze, dummy);
+    log("Second run...");
+    explore(maze, dummy);
+    log("Third run...");
+    explore(maze, dummy);
+    log("Fourth run...");
+    explore(maze, movelist);
+    API::ackReset();
+    maze.position = {0, 0};
+    maze.direction = UP;
+    log("Final run...");
+    followMoveList(maze, movelist);
+    log("Done!");
 }

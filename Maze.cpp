@@ -7,9 +7,6 @@
 #include "API.h"
 #include "Maze.h"
 
-#include <iterator>
-#include <queue>
-
 static void fillPath(Maze &maze);
 
 /**
