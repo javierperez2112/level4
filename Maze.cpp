@@ -20,11 +20,18 @@ Maze initMaze()
     newMaze.width = API::mazeWidth();
     newMaze.height = API::mazeHeight();
     // Initialize a maze with all squares connected (no walls).
-    newMaze.board = (GraphNode **)malloc(newMaze.width * sizeof(GraphNode *));
+    do
+    {
+        newMaze.board = (GraphNode **)malloc(newMaze.width * newMaze.height * sizeof(GraphNode *));
+    } while (newMaze.board == nullptr);
     for (int i = 0; i < newMaze.width; i++)
     {
-        newMaze.board[i] = (GraphNode *)malloc(newMaze.height * sizeof(GraphNode));
+        do
+        {
+            newMaze.board[i] = (GraphNode *)malloc(newMaze.height * sizeof(GraphNode));
+        } while (newMaze.board[i] == nullptr);
     }
+
     for (int i = 0; i < newMaze.width; i++)
     {
         for (int j = 0; j < newMaze.height; j++)
@@ -53,6 +60,15 @@ Maze initMaze()
         API::setWall(newMaze.width - 1, j, 'e');
     }
     return newMaze;
+}
+
+void deleteMaze(Maze &maze)
+{
+    for (int i = 0; i < maze.width; i++)
+    {
+        free(maze.board[i]);
+    }
+    free(maze.board);
 }
 
 /**
@@ -108,7 +124,14 @@ void updateDistances(Maze &maze, std::vector<Square> &targetSquares)
     {
         for (int j = 0; j < maze.height; j++)
         {
-            API::setText(i, j, std::to_string(maze.board[i][j].distance));
+            if (maze.board[i][j].visited)
+            {
+                API::setText(i, j, std::to_string(maze.board[i][j].distance));
+            }
+            else
+            {
+                API::setText(i, j, "inf");
+            }
         }
     }
 

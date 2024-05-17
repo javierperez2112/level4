@@ -51,7 +51,8 @@ int main(int argc, char *argv[])
     log("Running...");
     Maze maze = initMaze();
     moveList movelist;
-    moveList dummy;
+    moveList dummy; // Used to ignore the moves made while exploring.
+    int currentDistance;
     log("First run...");
     explore(maze, dummy);
     log("Second run...");
@@ -66,4 +67,5 @@ int main(int argc, char *argv[])
     log("Final run...");
     followMoveList(maze, movelist);
     log("Done!");
+    deleteMaze(maze);
 }

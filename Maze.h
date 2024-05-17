@@ -2,8 +2,6 @@
  *
  */
 
-
-
 #pragma once
 
 #include <vector>
@@ -35,10 +33,11 @@ struct Maze
 {
     GraphNode **board;
     Square position;
-    Direction direction; 
+    Direction direction;
     int width;
     int height;
 };
 
 Maze initMaze();
 void updateDistances(Maze &maze, std::vector<Square> &targetSquares);
+void deleteMaze(Maze &maze);

@@ -183,18 +183,23 @@ void followMoveList(Maze &maze, moveList &movelist)
 {
     while (movelist.size() > 0)
     {
-        switch (movelist.front())
+        int forwardMoves = 0;
+        while (movelist.size() > 0 && movelist.front() == UP)
         {
-        case UP:
-            API::moveForward();
-            break;
-        case RIGHT:
-            API::turnRight();
-            break;
-        case LEFT:
-            API::turnLeft();
-            break;
+            forwardMoves++;
+            movelist.pop();
         }
-        movelist.pop();
+        if (forwardMoves)
+            API::moveForward(forwardMoves);
+        if (movelist.front() == RIGHT)
+        {
+            API::turnRight();
+            movelist.pop();
+        }
+        if (movelist.front() == LEFT)
+        {
+            API::turnLeft();
+            movelist.pop();
+        }
     }
 }
