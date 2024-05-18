@@ -6,6 +6,10 @@
 * Rocco Gastaldi
 * Javier Pérez
 
+### Comandos para compilar y ejecutar el programa:
+Build: `g++ API.cpp Main.cpp Maze.cpp Mouse.cpp -o Main`
+RUn: `./Main`
+
 ## Razonamiento:
 El programa comienza con un grafo equivalente a un laberinto sin ninguna pared (todos los nodos conectados con sus vecinos). Siguiendo las casillas en orden de distancia descendente respecto a donde se quiere ir, se puede encontrar un camino "optimista. En cada movimiento se sigue este camino optimista, pero cuando se detecta una pared desconocida, el grafo se actualiza eliminando la arista entre los nodos que representan a las dos casillas. Por cada movimiento, las distancias se recalculan usando el grafo actualizado. Como el algoritmo se ejecuta varias veces para ida y vuelta, tendrá suficientes intentos para encontrar un camino óptimo, o sea, con el recorrido mínimo. Además, si ya encontró un camino pero no exploró una parte del laberinto, el camino optimista lo guiará por esa parte y se probará si hay una ruta mejor por esa parte. Además, para mejorar el rendimiento en la última vuelta, implementamos una lista de movimientos de la anteúltima vuelta que se va a seguir a ciegas en la última para ahorrar el tiempo de procesamiento de los demás algoritmos.
 
