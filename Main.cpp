@@ -1,5 +1,7 @@
 /**
- * @bug Program crashes, try example maze 4.
+ * @brief Run the whole procedure.
+ *
+ * @authors Ignacio Rojana, Rocco Gastaldi, Javier Pérez
  */
 
 #include <iostream>
@@ -15,6 +17,12 @@ void log(const std::string &text)
     std::cerr << text << std::endl;
 }
 
+/**
+ * @brief Take optimistic paths in order to explore the maze.
+ *
+ * @param maze The maze.
+ * @param movelist The moveList to fill with moves performed.
+ */
 static void explore(Maze &maze, moveList &movelist)
 {
 

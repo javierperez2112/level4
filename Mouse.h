@@ -1,7 +1,3 @@
-/**
- * Functions related to mouse movement and information
- */
-
 #pragma once
 #include "Maze.h"
 #include <forward_list>

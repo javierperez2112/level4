@@ -1,3 +1,9 @@
+/**
+ * @brief implementing move, walls and best path logic for the mouse.
+ * 
+ * @authors Ignacio Rojana, Rocco Gastaldi, Javier Pérez
+*/
+
 #include "Mouse.h"
 
 static Direction moveDirection(Square &move);
@@ -81,8 +87,6 @@ bool makeMove(Maze &maze, Square move, moveList &movelist)
  * @brief Update graph edges based on walls around mouse.
  *
  * @param maze The maze.
- * @bug Seems to ignore some nodes, try example maze 5.
- * Bug fixed: modulo operator will maintain sign!
  */
 void updateGraph(Maze &maze)
 {
@@ -146,6 +150,12 @@ void updateGraph(Maze &maze)
     }
 }
 
+/**
+ * @brief Get next move for optimistic path.
+ * 
+ * @param maze The maze.
+ * @return The optimistic move.
+*/
 Square leastDistanceMove(Maze &maze)
 {
     Square leastMove;
@@ -179,6 +189,12 @@ static Direction moveDirection(Square &move)
         return LEFT;
 }
 
+/**
+ * @brief Use moveList to follow last path.
+ * 
+ * @param maze The maze.
+ * @param movelist The moveList.
+*/
 void followMoveList(Maze &maze, moveList &movelist)
 {
     while (movelist.size() > 0)

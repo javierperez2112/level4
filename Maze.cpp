@@ -1,13 +1,11 @@
 /**
- *  Functions related to solving the maze
- *
- * @bug Distances are incorrectly set, try example maze 5.
- * Fixed by making the algorithm iterative.
- */
+ * @brief Functions implementing maze logic and the distance algorithm.
+ * 
+ * @authors Ignacio Rojana, Rocco Gastaldi, Javier Pérez
+*/
+
 #include "API.h"
 #include "Maze.h"
-
-static void fillPath(Maze &maze);
 
 /**
  * @brief Create new maze.
@@ -62,6 +60,11 @@ Maze initMaze()
     return newMaze;
 }
 
+/**
+ * @brief Free memory used by maze.
+ * 
+ * @param maze The maze.
+*/
 void deleteMaze(Maze &maze)
 {
     for (int i = 0; i < maze.width; i++)
@@ -72,7 +75,7 @@ void deleteMaze(Maze &maze)
 }
 
 /**
- * @brief Update distances using Dijkstra's algorithm.
+ * @brief Update distances using Dijkstra's algorithm and paint optimistic path.
  * @note Dijkstra's algorithm is implemented iteratively.
  *
  * @param maze The maze.
